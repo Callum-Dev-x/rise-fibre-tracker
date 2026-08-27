@@ -1,0 +1,291 @@
+/* ===========================================================================
+   RISE Fibre Door Tracker — styles
+   Built for a 72 year old user working outdoors on a phone:
+   big text, big buttons, high contrast, no fine detail, no gestures.
+   Everything scales from one variable (--scale) set by the Settings screen.
+   =========================================================================== */
+
+:root {
+  /* Text size. Settings swaps this via the data-size attribute on <html>. */
+  --scale: 1;
+
+  /* Base sizes — all other sizes are multiples of these */
+  --font-base: calc(20px * var(--scale));   /* body text, never below 20px */
+  --font-lg:   calc(23px * var(--scale));
+  --font-xl:   calc(28px * var(--scale));   /* headings */
+  --font-xxl:  calc(36px * var(--scale));
+  --font-huge: calc(46px * var(--scale));   /* prices, speeds */
+  --font-sm:   calc(17px * var(--scale));   /* only for supporting lines */
+  --tap:       calc(62px * var(--scale));   /* minimum button height */
+  --gap:       calc(16px * var(--scale));   /* space between tap targets */
+  --pad:       calc(18px * var(--scale));
+  --radius:    14px;
+
+  /* Colours — dark text on light backgrounds, no low contrast greys */
+  --page:      #F4F1EC;
+  --surface:   #FFFFFF;
+  --ink:       #14202B;
+  --ink-soft:  #364453;
+  --line:      #C9C2B8;
+  --accent:    #C4380F;                     /* RISE orange-red */
+  --accent-dk: #A02D0B;
+  --accent-grad: linear-gradient(135deg, #E8722C 0%, #C4380F 100%);
+  --lime:      #B9F53C;                     /* RISE badge green */
+  --lime-ink:  #22400A;
+
+  /* Status colours: light fill + very dark text, always readable */
+  --st-new-bg:    #FFFFFF;  --st-new-ink:    #364453;
+  --st-noans-bg:  #FFEFC9;  --st-noans-ink:  #6A4700;
+  --st-notint-bg: #E4E9EF;  --st-notint-ink: #2C3947;
+  --st-call-bg:   #D6E7FF;  --st-call-ink:   #11406F;
+  --st-sold-bg:   #DDF8A5;  --st-sold-ink:   #22400A;
+  --st-dnk-bg:    #FFDFD9;  --st-dnk-ink:    #85200C;
+}
+
+/* Text size settings. Large / Extra Large scale every size in the app. */
+html[data-size="large"] { --scale: 1.22; }
+html[data-size="xl"]    { --scale: 1.45; }
+
+/* `hidden` must beat the display rules below (the back button, modal, toast) */
+[hidden] { display: none !important; }
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: rgba(196,56,15,.18); }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: var(--font-base);
+  line-height: 1.45;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* --------------------------------------------------------------- top bar */
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: var(--gap);
+  padding: calc(10px * var(--scale)) var(--pad);
+  padding-top: calc(10px * var(--scale) + env(safe-area-inset-top));
+  background: var(--accent-grad);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+}
+.topbar-title {
+  margin: 0; font-size: var(--font-lg); font-weight: 800;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.btn-back {
+  display: inline-flex; align-items: center; gap: .4em;
+  min-height: calc(var(--tap) * .78);
+  padding: 0 calc(16px * var(--scale));
+  font: inherit; font-size: var(--font-base); font-weight: 700;
+  color: var(--accent-dk); background: #fff;
+  border: 0; border-radius: 999px; cursor: pointer;
+}
+
+/* ---------------------------------------------------------------- layout */
+.screen {
+  display: block;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: var(--pad) var(--pad) calc(48px + env(safe-area-inset-bottom));
+}
+.screen:focus { outline: none; }
+
+h2 { font-size: var(--font-xl); margin: calc(26px * var(--scale)) 0 calc(12px * var(--scale)); }
+h3 { font-size: var(--font-lg); margin: calc(18px * var(--scale)) 0 calc(8px * var(--scale)); }
+p  { margin: 0 0 calc(12px * var(--scale)); }
+.muted { color: var(--ink-soft); }
+.small { font-size: var(--font-sm); }
+.center { text-align: center; }
+
+/* --------------------------------------------------------------- buttons */
+/* Every button carries an icon AND a text label — never an icon on its own. */
+.btn {
+  display: flex; align-items: center; justify-content: flex-start; gap: .6em;
+  width: 100%;
+  min-height: var(--tap);
+  margin: 0 0 var(--gap);
+  padding: calc(12px * var(--scale)) calc(18px * var(--scale));
+  font: inherit; font-size: var(--font-lg); font-weight: 700; text-align: left;
+  color: var(--ink); background: var(--surface);
+  border: 3px solid var(--line); border-radius: var(--radius);
+  cursor: pointer;
+}
+.btn .ico { font-size: 1.25em; line-height: 1; flex: 0 0 auto; }
+.btn .sub { display: block; font-size: var(--font-sm); font-weight: 600; color: var(--ink-soft); }
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {                 /* the one main action on a screen */
+  min-height: calc(var(--tap) * 1.35);
+  justify-content: center;
+  font-size: var(--font-xl);
+  color: #fff; background: var(--accent-grad); border-color: var(--accent-dk);
+}
+.btn-secondary { border-color: var(--accent); color: var(--accent-dk); }
+.btn-lime      { background: var(--lime); border-color: #8CC61E; color: var(--lime-ink); }
+.btn-danger    { color: #fff; background: #B3230B; border-color: #7E1806; justify-content: center; }
+.btn-plain     { justify-content: center; }
+.btn-row       { display: flex; gap: var(--gap); }
+.btn-row .btn  { margin-bottom: var(--gap); }
+
+/* Outcome buttons on the address screen */
+.btn-outcome[aria-pressed="true"] {
+  border-color: var(--ink); border-width: 4px;
+  box-shadow: inset 0 0 0 3px #fff;
+}
+.btn-outcome[aria-pressed="true"]::after {
+  content: "Logged"; margin-left: auto;
+  font-size: var(--font-sm); font-weight: 800;
+  padding: .25em .7em; border-radius: 999px;
+  background: var(--ink); color: #fff;
+}
+.o-noans  { background: var(--st-noans-bg);  color: var(--st-noans-ink); }
+.o-notint { background: var(--st-notint-bg); color: var(--st-notint-ink); }
+.o-call   { background: var(--st-call-bg);   color: var(--st-call-ink); }
+.o-sold   { background: var(--st-sold-bg);   color: var(--st-sold-ink); }
+.o-dnk    { background: var(--st-dnk-bg);    color: var(--st-dnk-ink); }
+
+/* ----------------------------------------------------------------- cards */
+.card {
+  background: var(--surface);
+  border: 3px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--pad);
+  margin: 0 0 var(--gap);
+}
+.card-head { font-size: var(--font-xl); font-weight: 800; margin: 0 0 .3em; }
+
+/* Today's summary tiles */
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); margin-bottom: var(--gap); }
+.tile {
+  background: var(--surface); border: 3px solid var(--line); border-radius: var(--radius);
+  padding: calc(12px * var(--scale)); text-align: center;
+}
+.tile-num { display: block; font-size: var(--font-xxl); font-weight: 800; line-height: 1.1; }
+.tile-lab { display: block; font-size: var(--font-sm); font-weight: 700; color: var(--ink-soft); }
+.tile.sold { background: var(--st-sold-bg); border-color: #8CC61E; }
+.tile.sold .tile-lab, .tile.sold .tile-num { color: var(--st-sold-ink); }
+
+/* ------------------------------------------------------------ list rows */
+.row {
+  display: flex; align-items: center; gap: var(--gap);
+  width: 100%; min-height: var(--tap);
+  margin: 0 0 var(--gap);
+  padding: calc(14px * var(--scale)) calc(16px * var(--scale));
+  font: inherit; text-align: left;
+  background: var(--surface); color: var(--ink);
+  border: 3px solid var(--line); border-radius: var(--radius);
+  cursor: pointer;
+}
+.row-main { flex: 1 1 auto; min-width: 0; }
+.row-title { display: block; font-size: var(--font-lg); font-weight: 800; }
+.row-sub { display: block; font-size: var(--font-sm); color: var(--ink-soft); font-weight: 600; }
+.row-chev { flex: 0 0 auto; font-size: var(--font-xl); color: var(--accent); font-weight: 800; }
+
+/* Status badge — colour plus words, never colour alone */
+.badge {
+  display: inline-block; margin-top: .25em;
+  padding: .2em .7em; border-radius: 999px;
+  font-size: var(--font-sm); font-weight: 800;
+  border: 2px solid rgba(0,0,0,.18);
+}
+.b-new    { background: var(--st-new-bg);    color: var(--st-new-ink); }
+.b-noans  { background: var(--st-noans-bg);  color: var(--st-noans-ink); }
+.b-notint { background: var(--st-notint-bg); color: var(--st-notint-ink); }
+.b-call   { background: var(--st-call-bg);   color: var(--st-call-ink); }
+.b-sold   { background: var(--st-sold-bg);   color: var(--st-sold-ink); }
+.b-dnk    { background: var(--st-dnk-bg);    color: var(--st-dnk-ink); }
+
+/* Progress bar on the street list */
+.bar { display: block; height: calc(14px * var(--scale)); background: #E3DED6; border-radius: 999px; overflow: hidden; margin-top: .4em; }
+.bar > span { display: block; height: 100%; background: var(--accent-grad); }
+
+/* -------------------------------------------------------- package cards */
+.pkg { border-width: 3px; }
+.pkg-flag { border-color: var(--accent); }
+.pkg-top { display: flex; align-items: baseline; gap: .5em; flex-wrap: wrap; }
+.pkg-speed { font-size: var(--font-xxl); font-weight: 800; }
+.pkg-badge {
+  display: inline-block; padding: .18em .8em; border-radius: 8px;
+  background: var(--lime); color: var(--lime-ink);
+  font-size: var(--font-sm); font-weight: 800; text-transform: uppercase;
+}
+.pkg-price { font-size: var(--font-huge); font-weight: 800; line-height: 1.1; margin-top: .15em; }
+.pkg-price small { font-size: var(--font-base); font-weight: 700; }
+.pkg-note { font-weight: 700; color: var(--accent-dk); }
+.pkg-inc { margin-top: .6em; padding-top: .6em; border-top: 2px solid var(--line); font-size: var(--font-sm); }
+.pkg-inc b { display: block; }
+details.more > summary {
+  min-height: calc(var(--tap) * .8);
+  display: flex; align-items: center; gap: .5em;
+  font-size: var(--font-base); font-weight: 800; color: var(--accent-dk);
+  cursor: pointer; list-style: none;
+}
+details.more > summary::-webkit-details-marker { display: none; }
+.pkg-feats { margin: .2em 0 0; padding-left: 1.3em; }
+.pkg-feats li { margin-bottom: .35em; }
+
+/* ---------------------------------------------------------------- forms */
+label { display: block; font-size: var(--font-lg); font-weight: 800; margin: var(--gap) 0 .35em; }
+input[type="text"], input[type="tel"], input[type="date"], input[type="search"], textarea {
+  display: block; width: 100%;
+  min-height: var(--tap);
+  padding: calc(12px * var(--scale)) calc(14px * var(--scale));
+  font: inherit; font-size: var(--font-lg);
+  color: var(--ink); background: var(--surface);
+  border: 3px solid var(--ink-soft); border-radius: var(--radius);
+}
+/* Plain textarea so the phone's own microphone / dictation button works */
+textarea { min-height: calc(150px * var(--scale)); resize: vertical; line-height: 1.5; }
+input:focus, textarea:focus, .btn:focus-visible, .row:focus-visible {
+  outline: 4px solid #0B62C4; outline-offset: 2px;
+}
+
+/* --------------------------------------------------------- filter tabs */
+.tabs { display: flex; flex-wrap: wrap; gap: calc(10px * var(--scale)); margin-bottom: var(--gap); }
+.tab {
+  flex: 1 0 auto; min-height: calc(var(--tap) * .85);
+  padding: calc(8px * var(--scale)) calc(14px * var(--scale));
+  font: inherit; font-size: var(--font-base); font-weight: 800;
+  background: var(--surface); color: var(--ink);
+  border: 3px solid var(--line); border-radius: 999px; cursor: pointer;
+}
+.tab[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+/* -------------------------------------------------------- modal + toast */
+.modal-wrap {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--pad); background: rgba(11,18,25,.72);
+}
+.modal {
+  width: 100%; max-width: 520px;
+  background: var(--surface); border-radius: var(--radius);
+  padding: calc(24px * var(--scale));
+}
+.modal h2 { margin-top: 0; font-size: var(--font-xl); }
+.toast {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(24px + env(safe-area-inset-bottom)); z-index: 60;
+  padding: calc(14px * var(--scale)) calc(24px * var(--scale));
+  background: var(--ink); color: #fff;
+  font-size: var(--font-lg); font-weight: 800;
+  border-radius: 999px; box-shadow: 0 4px 16px rgba(0,0,0,.3);
+  pointer-events: none;            /* never swallows a tap meant for a button */
+  max-width: 80%; text-align: center;
+}
+
+.sold-reminder {
+  background: var(--lime); border: 3px solid #8CC61E; color: var(--lime-ink);
+  border-radius: var(--radius); padding: var(--pad); margin-bottom: var(--gap);
+  font-size: var(--font-lg); font-weight: 800;
+}
+
+.spacer { height: calc(20px * var(--scale)); }
+hr { border: 0; border-top: 3px solid var(--line); margin: calc(24px * var(--scale)) 0; }
+
+/* Respect a user who has asked for less motion */
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
