@@ -10,7 +10,15 @@ three things and nothing else:
 It does **not** sign anyone up — the on-screen reminder after a sale points the
 agent back to the company sign-up app.
 
-## Running it
+## Live site
+
+**https://callum-dev-x.github.io/rise-fibre-tracker/**
+
+Deployed from the `main` branch of `Callum-Dev-x/rise-fibre-tracker` via GitHub
+Pages. To ship a change: edit, **bump `CACHE` in `sw.js`**, commit, push. Phones
+that have it installed pick the new version up the next time they open the app.
+
+## Running it locally
 
 No build step, no server code, no accounts. Either:
 
