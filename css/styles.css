@@ -255,6 +255,18 @@ input:focus, textarea:focus, .btn:focus-visible, .row:focus-visible {
 }
 .tab[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
 
+/* Whose list is being worked — the first thing on the home screen */
+.tabs-list { margin-bottom: calc(8px * var(--scale)); }
+.tab-list {
+  flex: 1 1 0; min-height: var(--tap);
+  font-size: var(--font-lg);
+  border-color: var(--accent);
+  color: var(--accent-dk);
+}
+.tab-list[aria-pressed="true"] {
+  background: var(--accent-grad); color: #fff; border-color: var(--accent-dk);
+}
+
 /* -------------------------------------------------------- modal + toast */
 .modal-wrap {
   position: fixed; inset: 0; z-index: 50;

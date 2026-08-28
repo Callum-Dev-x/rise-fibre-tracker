@@ -45,21 +45,52 @@ It then opens full screen with no browser bar, and works with no signal.
 ```
 index.html              app shell
 css/styles.css          all styling; every size derives from --scale
-js/data-addresses.js    2,314 addresses in 77 streets (generated, see below)
+js/data-lists.js        which lists exist (drives the Ian's / Russel's tabs)
+js/data-ian.js          Ian: 2,314 addresses, 77 streets, Horsham RH13
+js/data-russel.js       Russel: 99,220 addresses, 1,864 streets, Suffolk IP
 js/data-packages.js     the five RISE Fibre packages and their prices
 js/app.js               all app logic: screens, saving, routing
+tools/build-data.py     turns a spreadsheet into one of the data files above
 manifest.json           PWA manifest (standalone, portrait)
 sw.js                   service worker — caches the app shell for offline use
 icons/                  app icons (192, 512, maskable, apple-touch, favicon)
 ```
 
+
 ## The data
 
-**Addresses** come from the supplied spreadsheet (`Crawley IAN.xlsx`,
-2,314 rows, all Horsham RH13). Its columns are UPRN, FullAddress,
-AddressLine1–5, Postcode, Sector, Outcode, Region. The UPRN is used as each
-door's permanent id, and the street name is derived from the address lines so
-the doors group into 77 walkable streets, sorted by house number.
+## The two lists
+
+The app carries a list per agent, switched with the two big tabs on the home
+screen. Records are keyed by UPRN and tagged with the list they belong to, so
+the two never mix — each agent sees only his own doors, history and totals.
+
+| List | Doors | Streets | Where |
+|------|-------|---------|-------|
+| Ian's | 2,314 | 77 | Horsham, RH13 |
+| Russel's | 99,220 | 1,864 | Ipswich (61,814), Bury St Edmunds (20,504), Felixstowe (9,992), Woodbridge (6,720) and 53 villages |
+
+Because Russel's list spans four towns, his flow is **Areas → Streets → Doors**,
+biggest town first. Ian's list is one town, so it skips the areas screen and
+goes straight to his 77 streets, exactly as before.
+
+Only the list in use is downloaded and parsed — loading both at launch would
+make the app crawl on an older phone. The service worker still caches both, so
+either works with no signal once the app has been opened once.
+
+### Adding or replacing a list
+
+```bash
+python3 tools/build-data.py <key> "<Display Name>" <spreadsheet.xlsx>
+```
+
+Then add the new file to `RISE_LIST_INDEX` in `js/data-lists.js` and to `SHELL`
+in `sw.js`, and bump `CACHE`. The generator expects the columns these
+spreadsheets use: UPRN, FullAddress, AddressLine1-5, Postcode, Sector, Outcode,
+Region. It derives street names from the address lines, groups doors by town,
+sorts each street by house number, and writes a compact format (streets stored
+once, postcodes in a table, UPRNs delta-encoded) — Russel's 99,220 doors come to
+3.7MB, about 600KB over the wire once the host gzips it.
 
 **Packages** in `js/data-packages.js` are transcribed from the pricing screens:
 
@@ -139,8 +170,6 @@ clearing site data in their browser settings.
 ## Updating the data later
 
 * **Prices:** edit `js/data-packages.js`.
-* **Addresses:** regenerate `js/data-addresses.js` from a new spreadsheet. The
-  file is one `const RISE_AREAS = { streets: [...], addresses: [...] }` object;
-  each address needs `id`, `street`, `label`, `full`, `postcode`.
+* **Addresses:** regenerate the list with `tools/build-data.py` (see above).
 * After changing any file, bump `CACHE` in `sw.js` (e.g. `v1` → `v2`) so
   installed phones pick up the new version.

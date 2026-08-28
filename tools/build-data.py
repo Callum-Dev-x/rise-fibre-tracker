@@ -1,0 +1,156 @@
+#!/usr/bin/env python3
+"""Turn a canvassing spreadsheet into one agent's address file.
+
+Usage:
+    python3 tools/build-data.py <agent-key> <"Display Name"> <source.xlsx>
+
+Writes js/data-<agent-key>.js. The output is deliberately compact — these lists
+run to tens of thousands of doors and have to parse quickly on an old phone —
+so streets are stored once with their doors nested underneath, postcodes are
+held in a per-street table, and UPRNs are delta-encoded against the first door
+on the street. js/app.js expands it back out at startup.
+
+Expected columns: UPRN, FullAddress, AddressLine1-5, Postcode, Sector, Outcode,
+Region.
+"""
+import collections
+import json
+import re
+import sys
+
+import openpyxl
+
+NUM = re.compile(r'^(\d+[A-Za-z]?)(?:\s*[-–]\s*\d+[A-Za-z]?)?\s+(.+)$')
+
+# Towns that appear spelled more than one way in the source data.
+TOWN_FIXES = {'BURY ST. EDMUNDS': 'BURY ST EDMUNDS'}
+
+
+def lines(row):
+    """AddressLine1-5, dropping the NULLs the export leaves behind."""
+    return [str(x).strip() for x in row[2:7] if x not in (None, 'NULL', '')]
+
+
+def title(s):
+    """HORSHAM -> Horsham, ST LEONARDS ROAD -> St Leonards Road, 3B -> 3B."""
+    return ' '.join(w if re.fullmatch(r'\d+[A-Za-z]?', w) else w.capitalize()
+                    for w in s.split())
+
+
+def suffixes(line):
+    """'FLAT 2 KING STREET' -> ['FLAT 2 KING STREET', '2 KING STREET', ...]"""
+    words = line.split()
+    return [' '.join(words[i:]) for i in range(len(words))]
+
+
+def build(agent_key, display_name, source):
+    ws = openpyxl.load_workbook(source, read_only=True, data_only=True).active
+    rows = [r for r in ws.iter_rows(min_row=2, values_only=True) if r[0] is not None]
+
+    # Pass 1 — learn real street names from the well-formed "<number> <STREET>"
+    # rows, so the odd ones ("IONA MOONS LANE") can be matched against them.
+    seen = collections.Counter()
+    for r in rows:
+        prem = lines(r)[:-2]
+        if prem:
+            m = NUM.match(prem[-1])
+            if m:
+                seen[m.group(2)] += 1
+    known = {s for s, c in seen.items() if c >= 2}
+
+    def street_of(prem):
+        """Rightmost premises line that ends in a street we know about."""
+        for ln in reversed(prem):
+            for cand in suffixes(ln):
+                if cand in known:
+                    return cand
+        m = NUM.match(prem[-1])
+        return m.group(2) if m else prem[-1]
+
+    def house_no(prem, street):
+        """Sort key: house number, so a street reads in walking order."""
+        for ln in reversed(prem):
+            m = NUM.match(ln)
+            if m and (ln.endswith(street) or len(prem) == 1):
+                return int(re.match(r'\d+', m.group(1)).group())
+        for ln in prem:
+            m = re.search(r'(\d+)', ln)
+            if m:
+                return int(m.group(1))
+        return 10 ** 6
+
+    # Pass 2 — place every door under a town and a street.
+    grouped = collections.defaultdict(list)     # (town, street) -> [door, ...]
+    skipped = 0
+    for r in rows:
+        pc = str(r[7]).strip()
+        L = lines(r)
+        if len(L) < 2:
+            skipped += 1
+            continue
+        # Drop the postcode line if the export repeated it, then take the town.
+        if L[-1].upper() == pc.upper():
+            L = L[:-1]
+        if not L:
+            skipped += 1
+            continue
+        town = TOWN_FIXES.get(L[-1].upper(), L[-1].upper())
+        prem = L[:-1]
+        if not prem:
+            skipped += 1
+            continue
+        street = street_of(prem)
+        grouped[(title(town), title(street))].append({
+            'id': int(r[0]),
+            'label': title(', '.join(prem)),
+            'pc': pc,
+            'n': house_no(prem, street),
+        })
+
+    # Pass 3 — compact each street: postcodes in a table, UPRNs delta-encoded.
+    towns = collections.defaultdict(list)
+    for (town, street), doors in grouped.items():
+        doors.sort(key=lambda d: (d['n'], d['label']))
+        pcs = sorted({d['pc'] for d in doors})
+        idx = {pc: i for i, pc in enumerate(pcs)}
+        base = doors[0]['id']
+        towns[town].append({
+            'n': street,
+            'p': pcs,
+            'b': base,
+            # [uprn delta, label, postcode index] — index omitted when it is 0
+            'd': [[d['id'] - base, d['label']] + ([idx[d['pc']]] if idx[d['pc']] else [])
+                  for d in doors],
+        })
+
+    areas = []
+    for town in sorted(towns):
+        streets = sorted(towns[town], key=lambda s: s['n'])
+        areas.append({'n': town, 's': streets,
+                      'c': sum(len(s['d']) for s in streets)})
+
+    total = sum(a['c'] for a in areas)
+    payload = {'key': agent_key, 'name': display_name, 'areas': areas}
+    out = 'js/data-%s.js' % agent_key
+    with open(out, 'w') as f:
+        f.write('/* %s canvassing list — %d addresses, %d streets, %d %s.\n'
+                '   Generated by tools/build-data.py from %s.\n'
+                '   Do not hand-edit; regenerate from the spreadsheet instead. */\n'
+                % (display_name, total,
+                   sum(len(a['s']) for a in areas), len(areas),
+                   'town' if len(areas) == 1 else 'towns',
+                   source.split('/')[-1]))
+        f.write('RISE_LISTS.push(')
+        json.dump(payload, f, separators=(',', ':'))
+        f.write(');\n')
+
+    print('%-8s %6d addresses  %5d streets  %3d towns  skipped %d  -> %s'
+          % (display_name, total, sum(len(a['s']) for a in areas), len(areas),
+             skipped, out))
+    return total
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 4:
+        sys.exit(__doc__)
+    build(sys.argv[1], sys.argv[2], sys.argv[3])
