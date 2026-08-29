@@ -17,9 +17,9 @@ var RISE_LIST_INDEX = [
     streets: 77
   },
   {
-    key: 'russel',
-    name: "Russel's",
-    file: 'js/data-russel.js',
+    key: 'russell',
+    name: "Russell's",
+    file: 'js/data-russell.js',
     where: 'Ipswich, Bury St Edmunds, Felixstowe & Woodbridge',
     addresses: 99220,
     streets: 1864

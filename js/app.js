@@ -3,8 +3,8 @@
    Plain JavaScript, no framework, no network. Everything is saved straight
    into localStorage so it is still there tomorrow morning.
 
-   Two canvassing lists (Ian's and Russel's) live in separate data files. Only
-   the one being used is downloaded and held in memory — Russel's runs to
+   Two canvassing lists (Ian's and Russell's) live in separate data files. Only
+   the one being used is downloaded and held in memory — Russell's runs to
    99,220 doors, so loading both at launch would make the app crawl on an
    older phone.
 
@@ -51,11 +51,37 @@
         store.lastStreet = saved.lastStreet || {};
         /* Older versions kept a single street name here. */
         if (typeof store.lastStreet !== 'object') store.lastStreet = {};
+        migrate();
       }
     } catch (e) {
       // A corrupt or unreadable store must never stop the app opening.
       console.warn('Could not read saved data:', e);
     }
+  }
+
+  /* Anything saved before a list was renamed follows the rename, so no door
+     that has already been knocked is stranded on a key nothing looks for. */
+  var RENAMED = { russel: 'russell' };
+  function migrate() {
+    var changed = false;
+    for (var id in store.records) {
+      var to = RENAMED[store.records[id].list];
+      if (to) { store.records[id].list = to; changed = true; }
+    }
+    store.events.forEach(function (e) {
+      var t = RENAMED[e.list];
+      if (t) { e.list = t; changed = true; }
+    });
+    var sTo = RENAMED[store.settings.list];
+    if (sTo) { store.settings.list = sTo; changed = true; }
+    for (var k in RENAMED) {
+      if (store.lastStreet[k] !== undefined) {
+        store.lastStreet[RENAMED[k]] = store.lastStreet[k];
+        delete store.lastStreet[k];
+        changed = true;
+      }
+    }
+    if (changed) save();
   }
 
   function save() {

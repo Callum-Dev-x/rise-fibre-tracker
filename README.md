@@ -45,9 +45,9 @@ It then opens full screen with no browser bar, and works with no signal.
 ```
 index.html              app shell
 css/styles.css          all styling; every size derives from --scale
-js/data-lists.js        which lists exist (drives the Ian's / Russel's tabs)
+js/data-lists.js        which lists exist (drives the Ian's / Russell's tabs)
 js/data-ian.js          Ian: 2,314 addresses, 77 streets, Horsham RH13
-js/data-russel.js       Russel: 99,220 addresses, 1,864 streets, Suffolk IP
+js/data-russell.js       Russell: 99,220 addresses, 1,864 streets, Suffolk IP
 js/data-packages.js     the five RISE Fibre packages and their prices
 js/app.js               all app logic: screens, saving, routing
 tools/build-data.py     turns a spreadsheet into one of the data files above
@@ -68,9 +68,9 @@ the two never mix — each agent sees only his own doors, history and totals.
 | List | Doors | Streets | Where |
 |------|-------|---------|-------|
 | Ian's | 2,314 | 77 | Horsham, RH13 |
-| Russel's | 99,220 | 1,864 | Ipswich (61,814), Bury St Edmunds (20,504), Felixstowe (9,992), Woodbridge (6,720) and 53 villages |
+| Russell's | 99,220 | 1,864 | Ipswich (61,814), Bury St Edmunds (20,504), Felixstowe (9,992), Woodbridge (6,720) and 53 villages |
 
-Because Russel's list spans four towns, his flow is **Areas → Streets → Doors**,
+Because Russell's list spans four towns, his flow is **Areas → Streets → Doors**,
 biggest town first. Ian's list is one town, so it skips the areas screen and
 goes straight to his 77 streets, exactly as before.
 
@@ -89,7 +89,7 @@ in `sw.js`, and bump `CACHE`. The generator expects the columns these
 spreadsheets use: UPRN, FullAddress, AddressLine1-5, Postcode, Sector, Outcode,
 Region. It derives street names from the address lines, groups doors by town,
 sorts each street by house number, and writes a compact format (streets stored
-once, postcodes in a table, UPRNs delta-encoded) — Russel's 99,220 doors come to
+once, postcodes in a table, UPRNs delta-encoded) — Russell's 99,220 doors come to
 3.7MB, about 600KB over the wire once the host gzips it.
 
 **Packages** in `js/data-packages.js` are transcribed from the pricing screens:
