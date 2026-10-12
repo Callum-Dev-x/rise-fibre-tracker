@@ -511,7 +511,7 @@
         return '<button type="button" class="btn ' + (r.pkg === p.id ? 'btn-lime' : '') + '" data-pkg="' + esc(p.id) + '" aria-pressed="' + (r.pkg === p.id) + '">' +
           '<span class="ico" aria-hidden="true">' + (r.pkg === p.id ? '&#10004;' : '&#9675;') + '</span>' +
           '<span>' + esc(p.speed) + '<span class="sub">' + money(p.price) +
-          ' a month for 6 months</span></span></button>';
+          ' a month for 4 months</span></span></button>';
       }).join('');
       extra =
         '<div class="sold-reminder">&#10004; Now open the sign-up app to finish this sale.</div>' +

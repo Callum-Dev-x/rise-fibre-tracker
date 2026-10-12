@@ -1,6 +1,6 @@
 /* RISE Fibre package data — transcribed from the official pricing screens.
    All prices are for the 24 month contract, the only term supplied.
-   Every tier starts with a 6 month intro discount, then steps up to the full
+   Every tier starts with a 4 month intro discount, then steps up to the full
    price and rises again each March, exactly as printed on the package cards. */
 
 const RISE_PACKAGES = [
@@ -9,16 +9,16 @@ const RISE_PACKAGES = [
     speed: '1 Gbps',
     speedMbps: 1000,
     flagship: true,
-    badge: 'Best Value',            // shown as "Most Popular" on its own card
+    badge: 'Most Popular',
     badgeAlt: 'Most Popular',
-    price: 5.00,                    // what they pay for the first 6 months
-    discount: 18.50,
-    discountText: 'Includes £18.50 discount for first 6 months.',
+    price: 5.00,                    // what they pay for the first 4 months
+    discount: 18.00,
+    discountText: 'Includes £18.00 discount for first 4 months.',
     blurb: 'Ideal for Ultra HD video streaming, gaming and high usage home-based work',
     increases: [
-      { price: 23.50, from: 'February 2027' },
-      { price: 27.50, from: 'March 2027' },
-      { price: 31.50, from: 'March 2028' }
+      { price: 23.00, from: 'February 2027' },
+      { price: 27.00, from: 'March 2027' },
+      { price: 31.00, from: 'March 2028' }
     ],
     features: [
       'Free activation',
@@ -35,13 +35,13 @@ const RISE_PACKAGES = [
     flagship: true,
     badge: 'Fastest',
     price: 5.00,
-    discount: 28.50,
-    discountText: 'Includes £28.50 discount for first 6 months.',
+    discount: 25.00,
+    discountText: 'Includes £25.00 discount for first 4 months.',
     blurb: 'Perfect for households with multiple users streaming, gaming and working online all at once',
     increases: [
-      { price: 33.50, from: 'February 2027' },
-      { price: 37.50, from: 'March 2027' },
-      { price: 41.50, from: 'March 2028' }
+      { price: 30.00, from: 'February 2027' },
+      { price: 34.00, from: 'March 2027' },
+      { price: 38.00, from: 'March 2028' }
     ],
     /* The 2.3 Gbps feature list was not in the supplied screens. The first two
        and the last are identical on every other tier; the speeds follow the
@@ -61,9 +61,9 @@ const RISE_PACKAGES = [
     speedMbps: 500,
     flagship: false,
     badge: null,
-    price: 15.00,
-    discount: 10.00,
-    discountText: 'Includes £10.00 discount for first 6 months.',
+    price: 5.00,
+    discount: 20.00,
+    discountText: 'Includes £20.00 discount for first 4 months.',
     blurb: 'Ideal for HD video streaming, gaming and cloud-based work',
     increases: [
       { price: 25.00, from: 'February 2027' },
@@ -84,9 +84,9 @@ const RISE_PACKAGES = [
     speedMbps: 250,
     flagship: false,
     badge: null,
-    price: 14.50,
-    discount: 10.00,
-    discountText: 'Includes £10.00 discount for first 6 months.',
+    price: 5.00,
+    discount: 19.50,
+    discountText: 'Includes £19.50 discount for first 4 months.',
     blurb: 'Great for multi-person, multi-device households',
     increases: [
       { price: 24.50, from: 'February 2027' },
@@ -107,9 +107,9 @@ const RISE_PACKAGES = [
     speedMbps: 150,
     flagship: false,
     badge: null,
-    price: 13.50,
-    discount: 10.00,
-    discountText: 'Includes £10.00 discount for first 6 months.',
+    price: 5.00,
+    discount: 18.50,
+    discountText: 'Includes £18.50 discount for first 4 months.',
     blurb: 'Perfect for everyday use, students and home-schooling',
     increases: [
       { price: 23.50, from: 'February 2027' },
@@ -126,8 +126,8 @@ const RISE_PACKAGES = [
   }
 ];
 
-/* Every price on every card is the first-6-months price. */
-const RISE_PRICE_NOTE = 'for the first 6 months';
+/* Every price on every card is the first-4-months price. */
+const RISE_PRICE_NOTE = 'for the first 4 months';
 
 /* Contract term shown on every card. Only the 24 month prices were supplied. */
 const RISE_TERM = '24 month contract';

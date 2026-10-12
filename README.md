@@ -84,15 +84,16 @@ once, postcodes in a table, UPRNs delta-encoded) — Russell's 99,220 doors come
 
 **Packages** in `js/data-packages.js` are transcribed from the pricing screens:
 
-| Speed    | First 6 months | Discount | Badge                     | Then                                               |
-|----------|----------------|----------|---------------------------|----------------------------------------------------|
-| 1 Gbps   | £5.00 p/m      | £18.50   | Best Value / Most Popular | £23.50 Feb 2027, £27.50 Mar 2027, £31.50 Mar 2028  |
-| 2.3 Gbps | £5.00 p/m      | £28.50   | Fastest                   | £33.50 Feb 2027, £37.50 Mar 2027, £41.50 Mar 2028  |
-| 500 Mbps | £15.00 p/m     | £10.00   | —                         | £25.00 Feb 2027, £29.00 Mar 2027, £33.00 Mar 2028  |
-| 250 Mbps | £14.50 p/m     | £10.00   | —                         | £24.50 Feb 2027, £28.50 Mar 2027, £32.50 Mar 2028  |
-| 150 Mbps | £13.50 p/m     | £10.00   | —                         | £23.50 Feb 2027, £27.50 Mar 2027, £31.50 Mar 2028  |
+| Speed | First 4 months | Discount | Badge | Feb 2027 | Mar 2027 | Mar 2028 |
+|-------|----------------|----------|-------|----------|----------|----------|
+| 1 Gbps | £5.00 p/m | £18.00 | Most Popular | £23.00 | £27.00 | £31.00 |
+| 2.3 Gbps | £5.00 p/m | £25.00 | Fastest | £30.00 | £34.00 | £38.00 |
+| 500 Mbps | £5.00 p/m | £20.00 | — | £25.00 | £29.00 | £33.00 |
+| 250 Mbps | £5.00 p/m | £19.50 | — | £24.50 | £28.50 | £32.50 |
+| 150 Mbps | £5.00 p/m | £18.50 | — | £23.50 | £27.50 | £31.50 |
 
-Every tier is a 6 month intro price, then the full price, then +£4 each March.
+Prices transcribed from the five screenshots supplied on 12 October 2026.
+Every tier has a 4 month intro price, followed by the dated increases above.
 Each card's "More information" holds the printed feature list (free activation,
 unlimited data, symmetric download/upload, 24 months minimum term).
 
