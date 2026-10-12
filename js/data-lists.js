@@ -9,22 +9,6 @@ var RISE_LISTS = [];            // the data files push their payload in here
 
 var RISE_LIST_INDEX = [
   {
-    key: 'ian',
-    name: "Ian's",
-    file: 'js/data-ian.js',
-    where: 'Horsham, RH13',
-    addresses: 2314,
-    streets: 77
-  },
-  {
-    key: 'russell',
-    name: "Russell's",
-    file: 'js/data-russell.js',
-    where: 'Ipswich, Bury St Edmunds, Felixstowe & Woodbridge',
-    addresses: 99220,
-    streets: 1864
-  },
-  {
     key: 'pe-ntn-cf',
     name: 'PE – NTN CF',
     file: 'js/data-pe-ntn-cf.js',

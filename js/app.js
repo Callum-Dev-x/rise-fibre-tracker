@@ -3,10 +3,7 @@
    Plain JavaScript, no framework, no network. Everything is saved straight
    into localStorage so it is still there tomorrow morning.
 
-   Two canvassing lists (Ian's and Russell's) live in separate data files. Only
-   the one being used is downloaded and held in memory — Russell's runs to
-   99,220 doors, so loading both at launch would make the app crawl on an
-   older phone.
+   Address lists load on demand to keep startup fast on older phones.
 
    Screens: Home / Areas / Streets / Street / Address / History / Settings.
    Navigation is by the URL hash so the phone's Back button works, and every
@@ -34,7 +31,7 @@
   var store = {
     records: {},                 // uprn -> { status, updated, notes, ... , list, town, street, label, pos }
     events: [],                  // { id, status, at, list } — drives "Today so far"
-    settings: { textSize: 'normal', list: 'ian' },
+    settings: { textSize: 'normal', list: 'pe-ntn-cf' },
     lastStreet: {}               // list key -> "areaIndex.streetIndex"
   };
 
@@ -47,7 +44,7 @@
         store.records = saved.records || {};
         store.events = saved.events || [];
         store.settings = saved.settings || store.settings;
-        if (!store.settings.list) store.settings.list = 'ian';
+        if (!store.settings.list) store.settings.list = 'pe-ntn-cf';
         store.lastStreet = saved.lastStreet || {};
         /* Older versions kept a single street name here. */
         if (typeof store.lastStreet !== 'object') store.lastStreet = {};
@@ -59,27 +56,22 @@
     }
   }
 
-  /* Anything saved before a list was renamed follows the rename, so no door
-     that has already been knocked is stranded on a key nothing looks for. */
-  var RENAMED = { russel: 'russell' };
+  /* Retire the removed lists on each device while preserving PE progress. */
   function migrate() {
+    function removed(key) { return !key || key === 'ian' || key === 'russell' || key === 'russel'; }
     var changed = false;
-    for (var id in store.records) {
-      var to = RENAMED[store.records[id].list];
-      if (to) { store.records[id].list = to; changed = true; }
-    }
-    store.events.forEach(function (e) {
-      var t = RENAMED[e.list];
-      if (t) { e.list = t; changed = true; }
+    Object.keys(store.records).forEach(function (id) {
+      if (removed(store.records[id].list)) { delete store.records[id]; changed = true; }
     });
-    var sTo = RENAMED[store.settings.list];
-    if (sTo) { store.settings.list = sTo; changed = true; }
-    for (var k in RENAMED) {
-      if (store.lastStreet[k] !== undefined) {
-        store.lastStreet[RENAMED[k]] = store.lastStreet[k];
-        delete store.lastStreet[k];
-        changed = true;
-      }
+    var keptEvents = store.events.filter(function (event) { return !removed(event.list); });
+    if (keptEvents.length !== store.events.length) { store.events = keptEvents; changed = true; }
+    Object.keys(store.lastStreet).forEach(function (key) {
+      if (removed(key)) { delete store.lastStreet[key]; changed = true; }
+    });
+    if (!RISE_LIST_INDEX.some(function (list) { return list.key === store.settings.list; })) {
+      store.settings.list = RISE_LIST_INDEX[0].key;
+      location.hash = '#/';
+      changed = true;
     }
     if (changed) save();
   }
@@ -185,7 +177,7 @@
     }
     return RISE_LIST_INDEX[0];
   }
-  function currentKey() { return store.settings.list || 'ian'; }
+  function currentKey() { return store.settings.list || 'pe-ntn-cf'; }
 
   /* Fetch a list's data file the first time it is needed. */
   function ensureList(key, done) {
@@ -286,7 +278,7 @@
       if (r.status === 'sold') sold++;
     }
 
-    /* Whose list is being worked. Two big tabs, never a dropdown. */
+    /* Whose list is being worked. Large buttons, never a dropdown. */
     var tabs = RISE_LIST_INDEX.map(function (l) {
       return '<button type="button" class="tab tab-list" data-list="' + esc(l.key) + '" aria-pressed="' +
         (l.key === key) + '">' + (l.key === key ? '&#10004; ' : '') + esc(l.name) + '</button>';

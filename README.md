@@ -45,9 +45,7 @@ It then opens full screen with no browser bar, and works with no signal.
 ```
 index.html              app shell
 css/styles.css          all styling; every size derives from --scale
-js/data-lists.js        which lists exist (drives the Ian's / Russell's tabs)
-js/data-ian.js          Ian: 2,314 addresses, 77 streets, Horsham RH13
-js/data-russell.js       Russell: 99,220 addresses, 1,864 streets, Suffolk IP
+js/data-lists.js        which address lists are available
 js/data-packages.js     the five RISE Fibre packages and their prices
 js/app.js               all app logic: screens, saving, routing
 tools/build-data.py     turns a spreadsheet into one of the data files above
@@ -59,25 +57,14 @@ icons/                  app icons (192, 512, maskable, apple-touch, favicon)
 
 ## The data
 
-## The address lists
+## The address list
 
-The app carries a list per agent, switched with the big tabs on the home
-screen. Records are keyed by UPRN and tagged with the list they belong to, so
-the lists never mix — each agent sees only his own doors, history and totals.
+The tracker contains **PE – NTN CF**: 20,525 addresses across 517 streets.
+The flow is Areas → Streets → Doors, with the largest towns first.
 
-| List | Doors | Streets | Where |
-|------|-------|---------|-------|
-| PE – NTN CF | 20,525 | 517 | Peterborough, Wisbech, Stamford and surrounding areas |
-| Ian's | 2,314 | 77 | Horsham, RH13 |
-| Russell's | 99,220 | 1,864 | Ipswich (61,814), Bury St Edmunds (20,504), Felixstowe (9,992), Woodbridge (6,720) and 53 villages |
-
-Because Russell's list spans four towns, his flow is **Areas → Streets → Doors**,
-biggest town first. Ian's list is one town, so it skips the areas screen and
-goes straight to his 77 streets, exactly as before.
-
-Only the list in use is downloaded and parsed — loading both at launch would
-make the app crawl on an older phone. The service worker still caches all lists, so
-either works with no signal once the app has been opened once.
+Ian's and Russell's lists have been removed. On update, their saved door
+records, events and last-street pointers are removed from each device.
+PE – NTN CF progress and text-size preferences are preserved.
 
 ### Adding or replacing a list
 
