@@ -23,5 +23,13 @@ var RISE_LIST_INDEX = [
     where: 'Ipswich, Bury St Edmunds, Felixstowe & Woodbridge',
     addresses: 99220,
     streets: 1864
+  },
+  {
+    key: 'pe-ntn-cf',
+    name: 'PE – NTN CF',
+    file: 'js/data-pe-ntn-cf.js',
+    where: 'Peterborough, Wisbech, Stamford & surrounding areas',
+    addresses: 20525,
+    streets: 517
   }
 ];

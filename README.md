@@ -59,14 +59,15 @@ icons/                  app icons (192, 512, maskable, apple-touch, favicon)
 
 ## The data
 
-## The two lists
+## The address lists
 
-The app carries a list per agent, switched with the two big tabs on the home
+The app carries a list per agent, switched with the big tabs on the home
 screen. Records are keyed by UPRN and tagged with the list they belong to, so
-the two never mix — each agent sees only his own doors, history and totals.
+the lists never mix — each agent sees only his own doors, history and totals.
 
 | List | Doors | Streets | Where |
 |------|-------|---------|-------|
+| PE – NTN CF | 20,525 | 517 | Peterborough, Wisbech, Stamford and surrounding areas |
 | Ian's | 2,314 | 77 | Horsham, RH13 |
 | Russell's | 99,220 | 1,864 | Ipswich (61,814), Bury St Edmunds (20,504), Felixstowe (9,992), Woodbridge (6,720) and 53 villages |
 
@@ -75,7 +76,7 @@ biggest town first. Ian's list is one town, so it skips the areas screen and
 goes straight to his 77 streets, exactly as before.
 
 Only the list in use is downloaded and parsed — loading both at launch would
-make the app crawl on an older phone. The service worker still caches both, so
+make the app crawl on an older phone. The service worker still caches all lists, so
 either works with no signal once the app has been opened once.
 
 ### Adding or replacing a list
@@ -83,6 +84,8 @@ either works with no signal once the app has been opened once.
 ```bash
 python3 tools/build-data.py <key> "<Display Name>" <spreadsheet.xlsx>
 ```
+
+Headerless NTN exports with a network column after UPRN are also supported.
 
 Then add the new file to `RISE_LIST_INDEX` in `js/data-lists.js` and to `SHELL`
 in `sw.js`, and bump `CACHE`. The generator expects the columns these

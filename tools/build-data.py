@@ -45,7 +45,18 @@ def suffixes(line):
 
 def build(agent_key, display_name, source):
     ws = openpyxl.load_workbook(source, read_only=True, data_only=True).active
-    rows = [r for r in ws.iter_rows(min_row=2, values_only=True) if r[0] is not None]
+    rows = []
+    for row_number, r in enumerate(ws.iter_rows(values_only=True), 1):
+        if r[0] is None:
+            continue
+        if row_number == 1 and str(r[0]).strip().upper() == 'UPRN':
+            continue
+        # NTN exports have no header and add a network column after UPRN.
+        if len(r) == 12:
+            r = (r[0],) + r[2:]
+        if len(r) != 11 or not str(r[0]).isdigit():
+            raise ValueError('Unrecognised address row %d' % row_number)
+        rows.append(r)
 
     # Pass 1 — learn real street names from the well-formed "<number> <STREET>"
     # rows, so the odd ones ("IONA MOONS LANE") can be matched against them.
