@@ -1,6 +1,6 @@
 /* Service worker: keeps the whole app on the phone so it opens instantly and
    keeps working with no signal. Bump CACHE when you change any file. */
-const CACHE = 'rise-door-tracker-v5';
+const CACHE = 'rise-door-tracker-v6';
 
 const SHELL = [
   './',
@@ -22,7 +22,9 @@ const SHELL = [
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then(c => c.addAll(SHELL.map(url => new Request(url, { cache: 'reload' }))))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -40,7 +42,7 @@ self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   event.respondWith(
     caches.match(event.request).then(hit => {
-      const network = fetch(event.request).then(res => {
+      const network = fetch(event.request, { cache: 'no-cache' }).then(res => {
         if (res && res.status === 200 && res.type === 'basic') {
           const copy = res.clone();
           caches.open(CACHE).then(c => c.put(event.request, copy));

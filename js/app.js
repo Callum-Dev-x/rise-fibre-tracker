@@ -862,7 +862,7 @@
   /* Cache the app so it opens instantly, even with no signal. */
   if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
     window.addEventListener('load', function () {
-      navigator.serviceWorker.register('sw.js').catch(function (e) {
+      navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(function (e) {
         console.warn('Offline mode unavailable:', e);
       });
     });
