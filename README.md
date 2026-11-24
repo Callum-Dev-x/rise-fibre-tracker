@@ -59,12 +59,16 @@ icons/                  app icons (192, 512, maskable, apple-touch, favicon)
 
 ## The address list
 
-The tracker contains **PE – NTN CF**: 20,525 addresses across 517 streets.
-The flow is Areas → Streets → Doors, with the largest towns first.
+The tracker contains two selectable lists:
+
+* **PE – NTN CF:** 20,525 addresses across 517 streets.
+* **PE N2N NOV26:** 55,579 addresses across 2,662 streets and 58 towns.
+
+The flow is List → Areas → Streets → Doors, with the largest towns first.
 
 Ian's and Russell's lists have been removed. On update, their saved door
-records, events and last-street pointers are removed from each device.
-PE – NTN CF progress and text-size preferences are preserved.
+records, events and last-street pointers are removed from each device. Progress
+for both current PE lists and text-size preferences is preserved.
 
 ### Adding or replacing a list
 

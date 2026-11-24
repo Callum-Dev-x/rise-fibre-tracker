@@ -15,5 +15,13 @@ var RISE_LIST_INDEX = [
     where: 'Peterborough, Wisbech, Stamford & surrounding areas',
     addresses: 20525,
     streets: 517
+  },
+  {
+    key: 'pe-n2n-nov26',
+    name: 'PE N2N NOV26',
+    file: 'js/data-pe-n2n-nov26.js',
+    where: 'Peterborough and surrounding PE areas',
+    addresses: 55579,
+    streets: 2662
   }
 ];
