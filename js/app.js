@@ -31,7 +31,7 @@
   var store = {
     records: {},                 // uprn -> { status, updated, notes, ... , list, town, street, label, pos }
     events: [],                  // { id, status, at, list } — drives "Today so far"
-    settings: { textSize: 'normal', list: 'pe-ntn-cf' },
+    settings: { textSize: 'normal', list: 'pe-n2n-nov26' },
     lastStreet: {}               // list key -> "areaIndex.streetIndex"
   };
 
@@ -44,7 +44,7 @@
         store.records = saved.records || {};
         store.events = saved.events || [];
         store.settings = saved.settings || store.settings;
-        if (!store.settings.list) store.settings.list = 'pe-ntn-cf';
+        if (!store.settings.list) store.settings.list = 'pe-n2n-nov26';
         store.lastStreet = saved.lastStreet || {};
         /* Older versions kept a single street name here. */
         if (typeof store.lastStreet !== 'object') store.lastStreet = {};
@@ -58,7 +58,9 @@
 
   /* Retire the removed lists on each device while preserving PE progress. */
   function migrate() {
-    function removed(key) { return !key || key === 'ian' || key === 'russell' || key === 'russel'; }
+    function removed(key) {
+      return !key || key === 'ian' || key === 'russell' || key === 'russel' || key === 'pe-ntn-cf';
+    }
     var changed = false;
     Object.keys(store.records).forEach(function (id) {
       if (removed(store.records[id].list)) { delete store.records[id]; changed = true; }
@@ -177,7 +179,7 @@
     }
     return RISE_LIST_INDEX[0];
   }
-  function currentKey() { return store.settings.list || 'pe-ntn-cf'; }
+  function currentKey() { return store.settings.list || 'pe-n2n-nov26'; }
 
   /* Fetch a list's data file the first time it is needed. */
   function ensureList(key, done) {

@@ -1,15 +1,14 @@
 /* Service worker: keeps the whole app on the phone so it opens instantly and
    keeps working with no signal. Bump CACHE when you change any file. */
-const CACHE = 'rise-door-tracker-v10';
+const CACHE = 'rise-door-tracker-v11';
 
 const SHELL = [
   './',
   './index.html',
-  './css/styles.css?v=10',
-  './js/app.js?v=10',
-  './js/data-packages.js?v=10',
-  './js/data-lists.js?v=10',
-  './js/data-pe-ntn-cf.js',
+  './css/styles.css?v=11',
+  './js/app.js?v=11',
+  './js/data-packages.js?v=11',
+  './js/data-lists.js?v=11',
   './js/data-pe-n2n-nov26.js',
   './manifest.json',
   './icons/icon-192.png',
